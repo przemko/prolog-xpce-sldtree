@@ -14,13 +14,36 @@ Należy zaimportować moduł **sldtree**. Eksportuje on jednoargumentowy predyka
 
 ## Przykłady
 
-### append(X, X, [1, 2, 3, 1, 2, 3])
-aa
+### cel: append(X, X, [1, 2, 3, 1, 2, 3])
+
+Sprawdźmy czy lista `[1,2,3,1,2,3]` jest konkatenacją dwóch identycznych list:
+
+```prolog
+?- sld_tree(append(X, X, [1, 2, 3, 1, 2, 3])).
+% SLD-drzewo zapisano w pliku: sldtree1.eps
+```
+
+Drzewo z pliku **sldtree1.eps** przedstawiono na poniższym rysunku:
 
 ![przykład 1](sldtree1.png "Przykład 1")
 
-### append(X, Y, [1, 2, 3, 1, 2, 3]), X = Y
-bb
+### cel: append(X, Y, [1, 2, 3, 1, 2, 3]), X = Y
+
+Jeszcze raz rozpatrzmy zadanie z poprzedniego przykładu ale tym razem rozerwiemy listę `[1, 2, 3, 1, 2, 3]` na dwa kawałki `X` oraz `Y` i sprawdzimy czy są identyczne dopiero po rozerwaniu.
+
+W tym celu zdefiniujemy predykat `unif/2` wykonujący unifikację:
+```prolog
+unif(X, X).
+```
+
+Zadajemy Prologowi pytanie:
+```prolog
+?- sld_tree((append(X, Y, [1, 2, 3, 1, 2, 3]), unif(X, Y))).
+% SLD-drzewo zapisano w pliku: sldtree2.eps
+```
+
+Drzewo z pliku **sldtree2.eps** przedstawiono na poniższym rysunku:
+
 
 ![przykład 2](sldtree2.png "Przykład 2")
 
