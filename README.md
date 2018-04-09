@@ -15,10 +15,12 @@ Należy zaimportować moduł **sldtree**. Eksportuje on jednoargumentowy predyka
 ## Przykłady
 
 ### append(X, X, [1, 2, 3, 1, 2, 3])
+aa
 
 ![przykład 1](sldtree1.png "Przykład 1")
 
 ### append(X, Y, [1, 2, 3, 1, 2, 3]), X = Y
+bb
 
 ![przykład 2](sldtree2.png "Przykład 2")
 
