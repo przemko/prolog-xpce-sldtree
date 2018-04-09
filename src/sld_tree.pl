@@ -4,10 +4,10 @@
     Purpose: SLD-tree visualization
 */
 
-:- module(sldtree, [sld_tree/1]).
+:- module(sld_tree, [sld_tree/1]).
 
 
-% sldtree(+Cel)
+% sldtree(+Goal)
 %
 % Rysuje SLD-drzewo dla zadanego celu. Narysowane drzewo zostaje
 % zapisane w pliku sldtree<n>.eps, gdzie n jest kolejnym numerem.
@@ -18,43 +18,43 @@
 % ?- sld_tree(append(X, Y, [1, 2, 3]).
 %
 
-sld_tree(Cel) :-
-	new(Okno, picture('SLD-tree')),
-	drzewo(Cel, Korzen),
-	new(Drzewo, tree(Korzen)),
-	send(Drzewo, direction, vertical),
-	send(Drzewo, neighbour_gap, 10),
-	send(Okno, display, Drzewo),
-	send(Okno, open),
+sld_tree(Goal) :-
+	new(Window, picture('SLD-tree')),
+	sld_tree(Goal, Root),
+	new(Tree, tree(Root)),
+	send(Tree, direction, vertical),
+	send(Tree, neighbour_gap, 10),
+	send(Window, display, Tree),
+	send(Window, open),
 	gensym(sldtree, Id),
-	atom_concat(Id, '.eps', NazwaPliku),
-	new(File, file(NazwaPliku)),
+	atom_concat(Id, '.eps', FileName),
+	new(File, file(FileName)),
 	send(File, open, write),
-	send(File, append, Okno?postscript),
+	send(File, append, Window?postscript),
 	send(File, close),
-	format('% SLD-drzewo zapisano w pliku: ~w\n', [NazwaPliku]),
+	format('% SLD-drzewo zapisano w pliku: ~w\n', [FileName]),
 	send(File, done).
 
-drzewo(true, Wierzcholek) :- !,
-	new(Wierzcholek, node(box(10, 10))).
-drzewo((Atom, Cel), Ojciec) :- !,
-	term_to_atom(:- (Atom, Cel), Napis),
-	new(Ojciec, node(text(Napis))),
-	forall(clause(Atom, Cialo),
-	       (dopisz(Cialo, Cel, NowyCel),
-		drzewo(NowyCel, Syn),
-		send(Ojciec, son, Syn))).
-drzewo(Atom, Ojciec) :- !,
-	term_to_atom(:- Atom, Napis),
-	new(Ojciec, node(text(Napis))),
-	forall(clause(Atom, Cialo),
-	       (drzewo(Cialo, Syn),
-		send(Ojciec, son, Syn))).
+sld_tree(true, Node) :- !,
+	new(Node, node(box(10, 10))).
+sld_tree((Atom, Goal), Father) :- !,
+	term_to_atom(:- (Atom, Goal), Label),
+	new(Father, node(text(Label))),
+	forall(clause(Atom, Body),
+	       (new_goal(Body, Goal, NewGoal),
+		sld_tree(NewGoal, Son),
+		send(Father, son, Son))).
+sld_tree(Atom, Father) :-
+	term_to_atom(:- Atom, Label),
+	new(Father, node(text(Label))),
+	forall(clause(Atom, Body),
+	       (sld_tree(Body, Son),
+		send(Father, son, Son))).
 
-dopisz(true, Cel, Cel) :- !.
-dopisz((A, B), Cel, (A, NowyCel)) :- !,
-	dopisz(B, Cel, NowyCel).
-dopisz(A, Cel, (A, Cel)) :- !.
+new_goal(true, Goal, Goal) :- !.
+new_goal((A, B), Goal, (A, NewGoal)) :- !,
+	new_goal(B, Goal, NewGoal).
+new_goal(A, Goal, (A, Goal)).
 
 
 
