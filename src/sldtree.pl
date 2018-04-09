@@ -4,7 +4,7 @@
     Purpose: SLD-tree visualization
 */
 
-:- module(sldtree, [sldtree/1]).
+:- module(sldtree, [sld_tree/1]).
 
 
 % sldtree(+Cel)
@@ -12,13 +12,13 @@
 % Rysuje SLD-drzewo dla zadanego celu. Narysowane drzewo zostaje
 % zapisane w pliku sldtree<n>.eps, gdzie n jest kolejnym numerem.
 %
-% Przyklady wywolania:
+% Przyklad wywolania:
 %
 % ?- use_module(library(lists)).
-% ?- sldtree(append(X, Y, [1, 2, 3]).
+% ?- sld_tree(append(X, Y, [1, 2, 3]).
 %
 
-sldtree(Cel) :-
+sld_tree(Cel) :-
 	new(Okno, picture('SLD-tree')),
 	drzewo(Cel, Korzen),
 	new(Drzewo, tree(Korzen)),
