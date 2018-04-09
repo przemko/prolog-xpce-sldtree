@@ -32,11 +32,17 @@ sld_tree(Goal) :-
 	send(File, open, write),
 	send(File, append, Window?postscript),
 	send(File, close),
-	format('% SLD-drzewo zapisano w pliku: ~w\n', [FileName]),
+	format('% SLD-drzewo zapisano w pliku: ~w~n', [FileName]),
 	send(File, done).
 
 sld_tree(true, Node) :- !,
 	new(Node, node(box(10, 10))).
+sld_tree((_; _), _) :- !,
+	format('% nie korzystać z alternatywy (;)~n'),
+	abort.
+sld_tree((_ -> _), _) :- !,
+	format('% nie korzystać z implikacji (->)~n'),
+	abort.
 sld_tree((Atom, Goal), Father) :- !,
 	term_to_atom(:- (Atom, Goal), Label),
 	new(Father, node(text(Label))),
