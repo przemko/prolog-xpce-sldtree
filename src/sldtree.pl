@@ -4,7 +4,7 @@
     Purpose: SLD-tree visualization
 */
 
-    :- module(sldtree, [sldtree/1]).
+:- module(sldtree, [sldtree/1]).
 
 
 % sldtree(+Cel)
@@ -14,6 +14,7 @@
 %
 % Przyklady wywolania:
 %
+% ?- use_module(library(lists)).
 % ?- sldtree(append(X, Y, [1, 2, 3]).
 %
 
