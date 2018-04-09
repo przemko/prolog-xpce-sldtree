@@ -3,7 +3,11 @@ Wizualizacja SLD-drzewa.
 
 ## Uruchamianie
 
-Należy zaimportować moduł **sld_tree**. Eksportuje on jednoargumentowy predykat __sld_tree/1__, którego argumentem jest zadany cel. Cel powinien korzystać tylko z predykatów zdefiniowanych w postaci klauzul (wywołanie predykatów zdefiniowanych w C, takich jak np. __=/2__, __!/0__ czy __is/2__ zakończy się błędem wykonania).
+Należy zaimportować moduł **sld_tree**. Eksportuje on jednoargumentowy predykat __sld_tree/1__, którego argumentem jest zadany cel. 
+
+Cel powinien korzystać tylko z predykatów zdefiniowanych w postaci klauzul (wywołanie predykatów zdefiniowanych w C, takich jak np. __=/2__, __!/0__ czy __is/2__ zakończy się błędem wykonania).
+
+W definicjach predykatów nie korzystać z alternatywy (spójnik **;**) i implikacji (spójnik **->**).
 
 ```prolog
 ?- use_module(sld_tree).
