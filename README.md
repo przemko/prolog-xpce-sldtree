@@ -25,7 +25,7 @@ Sprawdźmy czy lista `[1,2,3,1,2,3]` jest konkatenacją dwóch identycznych lis
 
 Drzewo z pliku **sldtree1.eps** przedstawiono na poniższym rysunku:
 
-![przykład 1](sldtree1.png "Przykład 1")
+![przykład 1](pic/sldtree1.png "Przykład 1")
 
 ### cel: append(X, Y, [1, 2, 3, 1, 2, 3]), X = Y
 
@@ -45,5 +45,5 @@ Zadajemy Prologowi pytanie:
 Drzewo z pliku **sldtree2.eps** przedstawiono na poniższym rysunku:
 
 
-![przykład 2](sldtree2.png "Przykład 2")
+![przykład 2](pic/sldtree2.png "Przykład 2")
 
