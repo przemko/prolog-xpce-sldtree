@@ -1,4 +1,4 @@
-/*  File:    sldtree.pl
+/*  File:    sld_tree.pl
     Author:  Przemyslaw Kobylanski
     Created: Jun  2 2006
     Purpose: SLD-tree visualization
