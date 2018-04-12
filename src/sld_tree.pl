@@ -7,7 +7,7 @@
 :- module(sld_tree, [sld_tree/1]).
 
 
-% sldtree(+Goal)
+% sld_tree(+Goal)
 %
 % Rysuje SLD-drzewo dla zadanego celu. Narysowane drzewo zostaje
 % zapisane w pliku sldtree<n>.eps, gdzie n jest kolejnym numerem.
@@ -28,7 +28,9 @@
 % true.
 
 sld_tree(Goal) :-
-	new(Window, picture('SLD-tree')),
+	term_to_atom(:- Goal, Label),
+	atom_concat('SLD-tree for ', Label, Name),
+	new(Window, picture(Name)),
 	sld_tree(Goal, Window).
 
 sld_tree(Goal, Window) :-
@@ -50,7 +52,9 @@ sld_tree(_, Window) :-
 	send(File, done).
 
 new_node(true, Node) :- !,
-	new(Node, node(box(10, 10))).
+	new(Box, box(10, 10)),
+	send(Box, fill_pattern, colour(red)),
+	new(Node, node(Box)).
 new_node(Goal, Node) :-
 	term_to_atom(:- Goal, Label),
 	new(Node, node(text(Label))).
