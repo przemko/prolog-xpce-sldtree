@@ -59,13 +59,15 @@ new_node(Goal, Node) :-
 	term_to_atom(:- Goal, Label),
 	new(Node, node(text(Label))).
 
-go(true, _).
 go((_; _), _) :-
 	format('% nie korzystaj z alternatywy (;)~n'),
 	abort.
 go((_ -> _), _) :-
 	format('% nie korzystaj z implikacji (->)~n'),
 	abort.
+go(true, _) :- !.
+go(((G1, G2), G3), Current) :- !,
+	go((G1, (G2, G3)), Current).
 go((Atom, Goal), Current) :- !,
 	clause(Atom, Body),
 	new_goal(Body, Goal, NewGoal),
@@ -73,17 +75,11 @@ go((Atom, Goal), Current) :- !,
 	send(Current, son, Next),
 	go(NewGoal, Next).
 go(Atom, Current) :-
-	Atom \= true,
 	clause(Atom, Body),
 	new_node(Body, Next),
 	send(Current, son, Next),
 	go(Body, Next).
 
-new_goal(true, Goal, Goal) :- !.
-new_goal((A, B), Goal, (A, NewGoal)) :- !,
-	new_goal(B, Goal, NewGoal).
-new_goal(A, Goal, (A, Goal)).
-
-
-
+new_goal(true, G, G) :- !.
+new_goal(G1, G2, (G1, G2)).
 
