@@ -15,17 +15,31 @@
 % Przyklad wywolania:
 %
 % ?- use_module(library(lists)).
-% ?- sld_tree(append(X, Y, [1, 2, 3]).
-%
+% ?- sld_tree(append(X, Y, [1, 2, 3])).
+% X = [],
+% Y = [1, 2, 3] ;
+% X = [1],
+% Y = [2, 3] ;
+% X = [1, 2],
+% Y = [3] ;
+% X = [1, 2, 3],
+% Y = [] ;
+% % SLD-drzewo zapisano w pliku: sldtree1.eps
+% true.
 
 sld_tree(Goal) :-
 	new(Window, picture('SLD-tree')),
-	sld_tree(Goal, Root),
+	sld_tree(Goal, Window).
+
+sld_tree(Goal, Window) :-
+	new_node(Goal, Root),
 	new(Tree, tree(Root)),
 	send(Tree, direction, vertical),
 	send(Tree, neighbour_gap, 10),
 	send(Window, display, Tree),
 	send(Window, open),
+	go(Goal, Root).
+sld_tree(_, Window) :-
 	gensym(sldtree, Id),
 	atom_concat(Id, '.eps', FileName),
 	new(File, file(FileName)),
@@ -35,27 +49,31 @@ sld_tree(Goal) :-
 	format('% SLD-drzewo zapisano w pliku: ~w~n', [FileName]),
 	send(File, done).
 
-sld_tree(true, Node) :- !,
+new_node(true, Node) :- !,
 	new(Node, node(box(10, 10))).
-sld_tree((_; _), _) :- !,
-	format('% nie korzystać z alternatywy (;)~n'),
+new_node(Goal, Node) :-
+	term_to_atom(:- Goal, Label),
+	new(Node, node(text(Label))).
+
+go(true, _).
+go((_; _), _) :-
+	format('% nie korzystaj z alternatywy (;)~n'),
 	abort.
-sld_tree((_ -> _), _) :- !,
-	format('% nie korzystać z implikacji (->)~n'),
+go((_ -> _), _) :-
+	format('% nie korzystaj z implikacji (->)~n'),
 	abort.
-sld_tree((Atom, Goal), Father) :- !,
-	term_to_atom(:- (Atom, Goal), Label),
-	new(Father, node(text(Label))),
-	forall(clause(Atom, Body),
-	       (new_goal(Body, Goal, NewGoal),
-		sld_tree(NewGoal, Son),
-		send(Father, son, Son))).
-sld_tree(Atom, Father) :-
-	term_to_atom(:- Atom, Label),
-	new(Father, node(text(Label))),
-	forall(clause(Atom, Body),
-	       (sld_tree(Body, Son),
-		send(Father, son, Son))).
+go((Atom, Goal), Current) :- !,
+	clause(Atom, Body),
+	new_goal(Body, Goal, NewGoal),
+	new_node(NewGoal, Next),
+	send(Current, son, Next),
+	go(NewGoal, Next).
+go(Atom, Current) :-
+	Atom \= true,
+	clause(Atom, Body),
+	new_node(Body, Next),
+	send(Current, son, Next),
+	go(Body, Next).
 
 new_goal(true, Goal, Goal) :- !.
 new_goal((A, B), Goal, (A, NewGoal)) :- !,
